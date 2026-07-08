@@ -1,0 +1,11 @@
+{
+  "name": "application-private-registry",
+  "version": 1,
+  "servers": {
+    "ocr": {
+      "url": "http://127.0.0.1:8011/mcp",
+      "timeout_s": 10.0,
+      "notes": "Local OCR MCP server"
+    }
+  }
+}

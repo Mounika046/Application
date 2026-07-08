@@ -1,0 +1,79 @@
+{
+  "name": "application/kb-query-agent",
+  "schema_version": "1.0.0",
+  "version": "1.0.0",
+  "description": "Queries vector-store content and returns grounded RAG context.",
+  "authors": [
+    "Mounika"
+  ],
+  "created_at": "2026-03-27T12:30:00Z",
+  "annotations": {
+    "role": "specialist-agent",
+    "owner": "application-mas",
+    "identity.agent_id": "ORY-263c71a0-d5fd-4e49-abb5-2211cf5871ef"
+  },
+  "skills": [
+    {
+      "id": 602,
+      "name": "retrieval_augmented_generation/document_or_database_question_answering"
+    },
+    {
+      "id": 10302,
+      "name": "natural_language_processing/information_retrieval_synthesis/question_answering"
+    }
+  ],
+  "modules": [
+    {
+      "name": "integration/a2a",
+      "id": 203,
+      "data": {
+        "card_data": {
+          "protocolVersions": [
+            "0.3.0"
+          ],
+          "name": "kb-query-agent",
+          "description": "Queries vector-store content and returns grounded RAG context.",
+          "supportedInterfaces": [
+            {
+              "url": "http://kb-query-agent:8032/",
+              "protocolBinding": "HTTP+JSON"
+            }
+          ],
+          "provider": {
+            "url": "http://kb-query-agent:8032/",
+            "organization": "Application"
+          },
+          "version": "1.0.0",
+          "capabilities": {
+            "streaming": false
+          },
+          "defaultInputModes": [
+            "text/plain",
+            "application/json"
+          ],
+          "defaultOutputModes": [
+            "application/json",
+            "text/plain"
+          ],
+          "skills": [
+            {
+              "id": "document-query",
+              "name": "Document Query",
+              "description": "Retrieve document context and citations from the vector store for a user question.",
+              "tags": [
+                "rag",
+                "retrieval",
+                "vector-store",
+                "query"
+              ],
+              "examples": [
+                "{\"question\":\"What is the capital of France?\",\"doc_id\":null,\"top_k\":5}"
+              ]
+            }
+          ]
+        },
+        "card_schema_version": "v1.0.0"
+      }
+    }
+  ]
+}

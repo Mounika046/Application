@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "subjects": [
+    {
+      "id": "document-ingest-agent",
+      "type": "agent",
+      "display_name": "Document Ingest Agent",
+      "description": "OCRs a document and ingests it into the vector store.",
+      "a2a_url": "http://document-ingest-agent:8031",
+      "agent_card_url": "http://127.0.0.1:8031/.well-known/agent-card.json",
+      "agentic_service_id": "073171f1-7737-4ed5-976a-4651af959a50",
+      "resolver_metadata_id": "ORY-2296473b-6dc2-4f65-80b5-c6e7667c40ca",
+      "skills": [
+        "document.ingest",
+        "document.ocr",
+        "vector_store.ingest"
+      ]
+    },
+    {
+      "id": "kb-query-agent",
+      "type": "agent",
+      "display_name": "Document Query Agent",
+      "description": "Queries vector-store content and returns grounded RAG context.",
+      "a2a_url": "http://kb-query-agent:8032",
+      "agent_card_url": "http://127.0.0.1:8032/.well-known/agent-card.json",
+      "agentic_service_id": "75f33390-b6c8-4ef6-91eb-90ccfa421581",
+      "resolver_metadata_id": "ORY-263c71a0-d5fd-4e49-abb5-2211cf5871ef",
+      "skills": [
+        "vector_store.query",
+        "rag.retrieve"
+      ]
+    },
+    {
+      "id": "web-search-agent",
+      "type": "agent",
+      "display_name": "Web Search Agent",
+      "description": "Runs live web search when document retrieval is not enough.",
+      "a2a_url": "http://web-search-agent:8033",
+      "agent_card_url": "http://127.0.0.1:8033/.well-known/agent-card.json",
+      "agentic_service_id": "90554527-6b63-4d24-b031-2e1506810740",
+      "resolver_metadata_id": "ORY-9d7a460d-b05a-46e5-a666-0fae86319d50",
+      "skills": [
+        "web.search",
+        "research.web"
+      ]
+    },
+    {
+      "id": "comparison-agent",
+      "type": "agent",
+      "display_name": "Comparison Agent",
+      "description": "Compares two text inputs and returns structured similarities and differences.",
+      "a2a_url": "http://comparison-agent:8034",
+      "agent_card_url": "http://127.0.0.1:8034/.well-known/agent-card.json",
+      "agentic_service_id": "d4300f9f-fb7b-4438-b755-4b6ac1b53d8d",
+      "resolver_metadata_id": "ORY-a04fe14b-42f9-49f6-8304-5e75a8319c37",
+      "skills": [
+        "document.compare",
+        "policy.compare",
+        "difference.analysis"
+      ]
+    },
+
+    {
+      "id": "ocr-server",
+      "type": "mcp_server",
+      "display_name": "OCR MCP Server",
+      "description": "Hosts the OCR extraction tool.",
+      "mcp_url": "http://ocr-server:8011/mcp",
+      "tools": [
+        "ocr_extract"
+      ]
+    },
+    {
+      "id": "application-mas",
+      "type": "mas",
+      "display_name": "Application Orchestrator",
+      "description": "LangGraph orchestrator plus A2A agents and OCR tooling.",
+      "entrypoint": "application-main",
+      "agents": [
+        "document-ingest-agent",
+        "kb-query-agent",
+        "web-search-agent",
+        "comparison-agent"        
+      ],
+      "mcp_servers": [
+        "ocr-server"
+      ]
+    }
+  ]
+}

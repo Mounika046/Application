@@ -1,0 +1,156 @@
+<svg width="2100" height="1480" viewBox="0 0 2100 1480" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f6f1e7; }
+      .panel { fill: #fffdfa; stroke: #d5cec1; stroke-width: 2; }
+      .runtime { fill: #e7eff8; stroke: #a8bfd7; stroke-width: 2; }
+      .doc { fill: #e8f2e3; stroke: #b2caa4; stroke-width: 2; }
+      .web { fill: #efe7f8; stroke: #c6b4db; stroke-width: 2; }
+      .compare { fill: #f7e7d8; stroke: #d1b499; stroke-width: 2; }
+      .oci { fill: #ece7f5; stroke: #c5bbd8; stroke-width: 2; }
+      .title { font: 700 36px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .subtitle { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #556577; }
+      .section { font: 700 23px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .box { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .text { font: 400 15px 'Segoe UI', Arial, sans-serif; fill: #495a6a; }
+      .mono { font: 400 14px Consolas, monospace; fill: #495a6a; }
+      .line { stroke: #66788a; stroke-width: 3; fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#66788a"/>
+    </marker>
+    <marker id="arrow-both" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#66788a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="2100" height="1480"/>
+
+  <text x="60" y="72" class="title">OCI Generative AI Services Used In The Application</text>
+  <text x="60" y="106" class="subtitle">Exact current flow in the app: what OCI services we use, where we use them, and how each request reaches them</text>
+
+  <rect class="panel" x="50" y="140" width="2000" height="200" rx="24"/>
+  <text x="85" y="186" class="section">Shared application entry before OCI service calls</text>
+
+  <rect class="runtime" x="100" y="240" width="220" height="68" rx="16"/>
+  <text x="132" y="281" class="box">User request</text>
+
+  <rect class="runtime" x="390" y="240" width="260" height="68" rx="16"/>
+  <text x="422" y="281" class="box">graph_app.py route</text>
+
+  <rect class="runtime" x="720" y="240" width="300" height="68" rx="16"/>
+  <text x="752" y="281" class="box">orchestrator_agent.py</text>
+
+  <rect class="runtime" x="1090" y="240" width="280" height="68" rx="16"/>
+  <text x="1122" y="281" class="box">AGNTCY discovery</text>
+
+  <rect class="runtime" x="1440" y="240" width="300" height="68" rx="16"/>
+  <text x="1472" y="281" class="box">Identity verification</text>
+
+  <rect class="runtime" x="1810" y="240" width="180" height="68" rx="16"/>
+  <text x="1842" y="281" class="box">Agent call</text>
+
+  <line class="line" x1="320" y1="274" x2="390" y2="274" marker-end="url(#arrow)"/>
+  <line class="line" x1="650" y1="274" x2="720" y2="274" marker-end="url(#arrow)"/>
+  <line class="line" x1="1020" y1="274" x2="1090" y2="274" marker-end="url(#arrow)"/>
+  <line class="line" x1="1370" y1="274" x2="1440" y2="274" marker-end="url(#arrow)"/>
+  <line class="line" x1="1740" y1="274" x2="1810" y2="274" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="50" y="380" width="650" height="980" rx="24"/>
+  <text x="85" y="426" class="section">Document route: OCR, store, retrieve, answer</text>
+
+  <rect class="doc" x="100" y="500" width="550" height="84" rx="18"/>
+  <text x="132" y="534" class="box">1. document-ingest-agent</text>
+  <text x="132" y="562" class="text">gets the file path, calls the OCR MCP server, and builds plain document text</text>
+
+  <rect class="oci" x="100" y="635" width="550" height="84" rx="18"/>
+  <text x="132" y="669" class="box">2. OCI Files API</text>
+  <text x="132" y="697" class="text">retrieval_client.py uploads that text as a managed OCI file</text>
+
+  <rect class="oci" x="100" y="770" width="550" height="84" rx="18"/>
+  <text x="132" y="804" class="box">3. OCI Vector Store file attach</text>
+  <text x="132" y="832" class="text">the uploaded file is attached to the configured shared vector store id</text>
+
+  <rect class="oci" x="100" y="905" width="550" height="84" rx="18"/>
+  <text x="132" y="939" class="box">4. OCI Vector Store search</text>
+  <text x="132" y="967" class="text">document_query_agent.py searches the vector store, filtered back to the same file id</text>
+
+  <rect class="oci" x="100" y="1040" width="550" height="84" rx="18"/>
+  <text x="132" y="1074" class="box">5. OCI Responses API</text>
+  <text x="132" y="1102" class="text">the retrieved chunks are passed to the model to answer only from that grounded context</text>
+
+  <rect class="doc" x="100" y="1175" width="550" height="120" rx="18"/>
+  <text x="132" y="1209" class="box">6. Final document answer</text>
+  <text x="132" y="1237" class="text">the app returns the grounded document answer directly.</text>
+  <text x="132" y="1263" class="text">No separate DB path is used now. The current document flow is vector-store based.</text>
+
+  <line class="line" x1="375" y1="584" x2="375" y2="635" marker-end="url(#arrow)"/>
+  <line class="line" x1="375" y1="719" x2="375" y2="770" marker-end="url(#arrow)"/>
+  <line class="line" x1="375" y1="854" x2="375" y2="905" marker-end="url(#arrow)"/>
+  <line class="line" x1="375" y1="989" x2="375" y2="1040" marker-end="url(#arrow)"/>
+  <line class="line" x1="375" y1="1124" x2="375" y2="1175" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="730" y="380" width="650" height="980" rx="24"/>
+  <text x="765" y="426" class="section">Web route: OCI Responses tool calling through remote MCP</text>
+
+  <rect class="web" x="780" y="525" width="550" height="84" rx="18"/>
+  <text x="812" y="559" class="box">1. web-search-agent</text>
+  <text x="812" y="587" class="text">takes the user question and prepares a hosted SerpApi MCP call request</text>
+
+  <rect class="oci" x="780" y="690" width="550" height="84" rx="18"/>
+  <text x="812" y="724" class="box">2. OCI Responses API</text>
+  <text x="812" y="752" class="text">create_mcp_response builds a Responses call with an MCP tool definition</text>
+
+  <rect class="oci" x="780" y="855" width="550" height="84" rx="18"/>
+  <text x="812" y="889" class="box">3. OCI Remote MCP</text>
+  <text x="812" y="917" class="text">OCI connects to the hosted SerpApi MCP server and runs the allowed search tool</text>
+
+  <rect class="web" x="780" y="1020" width="550" height="120" rx="18"/>
+  <text x="812" y="1054" class="box">4. Grounded web result returns</text>
+  <text x="812" y="1082" class="text">the tool result comes back through Responses, and the app returns the web text directly</text>
+  <text x="812" y="1108" class="text">for pure web requests, there is no extra final-model rewrite step</text>
+
+  <line class="line" x1="1055" y1="609" x2="1055" y2="690" marker-end="url(#arrow)"/>
+  <line class="line" x1="1055" y1="774" x2="1055" y2="855" marker-end="url(#arrow)"/>
+  <line class="line" x1="1055" y1="939" x2="1055" y2="1020" marker-end="url(#arrow)"/>
+
+  <path class="line" d="M 1330 732 L 1460 732 L 1460 897 L 1330 897" marker-start="url(#arrow-both)" marker-end="url(#arrow-both)"/>
+  <text x="1480" y="810" class="text">tool call and tool result</text>
+
+  <rect class="panel" x="1410" y="380" width="640" height="980" rx="24"/>
+  <text x="1445" y="426" class="section">Comparison route: structured comparison on OCI</text>
+
+  <rect class="compare" x="1460" y="490" width="540" height="84" rx="18"/>
+  <text x="1492" y="524" class="box">1. OCR text preparation</text>
+  <text x="1492" y="552" class="text">both documents are OCRed first, then the text is passed into comparison-agent</text>
+
+  <rect class="oci" x="1460" y="625" width="540" height="84" rx="18"/>
+  <text x="1492" y="659" class="box">2. OCI Guardrails</text>
+  <text x="1492" y="687" class="text">input and output checks run around Responses calls</text>
+
+  <rect class="oci" x="1460" y="760" width="540" height="84" rx="18"/>
+  <text x="1492" y="794" class="box">3. OCI Embeddings</text>
+  <text x="1492" y="822" class="text">a similarity score is computed for the two texts before the main comparison result is built</text>
+
+  <rect class="oci" x="1460" y="895" width="540" height="84" rx="18"/>
+  <text x="1492" y="929" class="box">4. OCI Code Interpreter and Containers</text>
+  <text x="1492" y="957" class="text">optional metrics are generated inside OCI for richer structured comparison support</text>
+
+  <rect class="oci" x="1460" y="1030" width="540" height="84" rx="18"/>
+  <text x="1492" y="1064" class="box">5. OCI Responses API with function calling</text>
+  <text x="1492" y="1092" class="text">the model must emit one structured function payload for summary, differences, risks and confidence</text>
+
+  <rect class="compare" x="1460" y="1165" width="540" height="130" rx="18"/>
+  <text x="1492" y="1199" class="box">6. Final comparison result</text>
+  <text x="1492" y="1227" class="text">the app formats the structured output into summary, similarities, differences,</text>
+  <text x="1492" y="1253" class="text">added items, missing items and risk changes for the user</text>
+
+  <line class="line" x1="1730" y1="574" x2="1730" y2="625" marker-end="url(#arrow)"/>
+  <line class="line" x1="1730" y1="709" x2="1730" y2="760" marker-end="url(#arrow)"/>
+  <line class="line" x1="1730" y1="844" x2="1730" y2="895" marker-end="url(#arrow)"/>
+  <line class="line" x1="1730" y1="979" x2="1730" y2="1030" marker-end="url(#arrow)"/>
+  <line class="line" x1="1730" y1="1114" x2="1730" y2="1165" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="50" y="1385" width="2000" height="50" rx="18"/>
+  <text x="80" y="1417" class="text">OCI services currently used in the app: Responses API, Conversations, Files API, Vector Store file attach, Vector Store search, Remote MCP, Guardrails, Embeddings, Code Interpreter, and Containers.</text>
+</svg>

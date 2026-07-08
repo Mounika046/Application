@@ -1,0 +1,300 @@
+Passwords MUST NOT be stored within Confluence pages. Please refer to Oracle's Password Policy and Information Protection Policy.
+IT Support is currently experiencing higher response times as we transition to a new support model. Thank you for your patience.
+Pages/ …/ Hosted Deployment User Guide
+Created by Jesse Zhang, last updated on Mar 31, 2026 • 23 minute read
+Hosted Application Customer Onboarding
+For a complete guidance of the overall GenAI Agentic Capabilities, see Generative AI Platform Agentic Capabilities - March 2026 GA User GuideOverviewIntroductionDeployment Scaling ConfigurationEnvironment ConfigurationManaged StorageEnvironment VariablesNetworking ConfigurationNetworking Type (Outbound Traffic)Endpoint Type (Inbound Traffic)Authentication ConfigurationDeployment ConfigurationContainer Requirement and RestrictionsTutorial PrerequisitesStep 1: Configure IAM PoliciesStep 2: Get ready to use OCIRStep 3: Set up your identity domain and applicationCreate an Identity DomainCreate an Application in the Identity DomainConfigure OAuth SettingsTutorial: Open API MCP serverPreparationStep 1. Prepare source package and Docker imageStep 2. Publish the image to OCIRHosted ApplicationStep 1: Sign in to the OCI ConsoleStep 2: Navigate to Hosted DeploymentsStep 3: Create a New ApplicationStep 4: Configure DeploymentStep 5: Configure EnvironmentStep 6: Configure NetworkingStep 7: Configure AuthenticationStep 8: Review and CreateHosted DeploymentStep 1: Create a DeploymentStep 2: Deployment ConfigurationStep 3: Verify Deployment StatusInvoke MCP ServerOption 1: CurlOption 2: PythonWhat You’ve AccomplishedTutorial: Simple LangGraph AgentPreparationStep 1. Prepare the Docker imageStep 2. Publish the image to OCIRStep 3. (Optional) Launch a private service in your VCNExample Cost ServiceHosted ApplicationStep 1: Sign in to the OCI ConsoleStep 2: Navigate to Hosted DeploymentsStep 3: Create a New ApplicationStep 4: Configure DeploymentStep 5: Configure EnvironmentStep 6: Configure NetworkingStep 7: Configure AuthenticationStep 8: Review and CreateHosted DeploymentStep 1: Create a DeploymentStep 2: Deployment ConfigurationStep 3: Verify Deployment StatusInvoke ApplicationWhat You’ve AccomplishedNext Steps (Optional)
+For a complete guidance of the overall GenAI Agentic Capabilities, see Generative AI PlatformAgentic Capabilities - March 2026 GA User Guide
+Overview
+Hosted Deployment is a managed deployment service that allows users to quickly deploy AI agents, MCP servers, or general web services with built-in elastic scaling andflexibility. It abstracts infrastructure management, enabling teams to focus on agent design and business outcomes rather than operational details. It is provided as a part ofOCI Generative AI service, and you may click OCI Generative AI to learn more.
+This document introduces the Hosted Deployment service and explains how to get started. It provides two step-by-step tutorials to help you onboard: one for deploying anMCP server and another for deploying an AI agent.
+ORACLE INTERNAL
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 1/9
+Introduction
+The Hosted Deployment service provides two major resources: Application and Deployment. An Application defines the configuration for how your container image shouldbe deployed, such as networking, scaling, and authentication settings. A Deployment is created within an Application and references a specific container image in OracleCloud Infrastructure Registry (OCIR). Creating a Deployment provisions the underlying infrastructure and starts the application, making it running and accessible.
+At this time, OCIR is the only supported image registry. Click here to learn more about  Oracle Cloud Infrastructure Registry .
+Deployment Scaling Configuration
+Hosted Deployment supports autoscaling, which controls how many copies (replicas) of your application run at any given time.
+You can configure:
+Minimum replicas – the lowest number of running copiesMaximum replicas – the highest number of copies allowed during scalingAutoscaling metric – choose one of CPU, Memory, Concurrency, or RPSThreshold – set the target threshold for the selected metric to control when the application scales up or down
+You may set the minimum replicas to 0. When there is no incoming traffic, the application scales down to zero replicas to reduce costs.
+Environment Configuration
+Hosted Deployment provides managed storage services and environment variables that your application can use at runtime.
+Managed Storage
+Managed storage supports OCI Database with PostgreSQL, OCI Cache (Redis), and Oracle Autonomous Database (ADB). For each storage type, you can specify anenvironment variable name so the connection URI is injected into your application at runtime. Click here to learn more about OCI Database with PostgreSQL, here to learnmore about OCI Cache, and here to learn more about Oracle Autonomous AI Database.
+When configuring storage for an application, you can either create a new storage resource or choose an existing one. Reusing existing storage lets multiple applications sharethe same backend instance, for example a shared ADB instance.
+Environment Variables
+You can also define custom environment variables to control application behavior at runtime. Environment variables are commonly used to configure values such as API keys,feature flags, or environment-specific settings.
+Networking Configuration
+Networking determines how your application connects to other networks and how users access your application.
+Networking Type (Outbound Traffic)
+This setting controls outbound network access from your application.
+Default. Allows access to OCI services and the public internet.Custom. Enables private access to a specified VCN and subnet. Click here to learn more about OCI Networking.
+Endpoint Type (Inbound Traffic)
+This setting controls how users access your application.
+Public. Exposes the application to the public internet.
+Authentication Configuration
+Authentication controls who can access your application.
+Identity Domain. Enables federated authentication using OCI Identity Domains or an external identity provider. Click here to learn more about OCI Identity Domain.
+Deployment Configuration
+Multiple artifacts can be associated with a Hosted Application, but only one artifact can be active at a time.The application endpoint remains unchanged throughout the lifecycle of the application, regardless of which artifact is active.When switching the active artifact, the service performs the transition using a blue-green deployment strategy to ensure a smooth and uninterrupted rollout.
+Container Requirement and Restrictions
+Your Docker container running in the Hosted Deployment environment must meet the following requirements. 
+Host and Port
+1. The container must listen on host 0.0.0.0.2. The container must listen on port 8080.
+Http Response Content Type
+The container must expose an HTTP-based service that implements REST-style request/response endpoints with methods of GET, PUT, POST, DELETE, PATCH usingcustomer defined paths.
+The platform determines whether a request expects a streaming response by inspecting the Accept header.
+If the Accept header contains text/event-stream, the endpoint returns a Server-Sent Events (SSE) response with content type: Content-Type: text/event-stream 
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 2/9
+Otherwise, the endpoint returns a standard JSON response with content type: Content-Type: application/json 
+This mechanism allows a single endpoint to support both streaming and non-streaming interactions in a consistent and backward-compatible manner.
+Readiness Endpoint
+The docker container must expose the readiness endpoint to verify that the application container is fully initialized and capable of handling incoming requests.
+Path: /readyPurpose: Indicates whether the container is ready to receive trafficResponse Format: HTTP status code onlyContent-Type: application/jsonSuccess Status Code: 200 OK (application is ready)
+If the container is not ready, the endpoint should return a non-200 status code to prevent traffic routing.
+Liveness Endtpoint
+The docker container must expose the liveness endpoint to verify that the application container is not in a stuck or unrecoverable state and does not require a restart.
+Path: /healthPurpose: Detects whether the container is alive and functioningResponse Format: HTTP status code onlyContent-Type: application/jsonSuccess Status Code: 200 OK (application is healthy)
+If the application enters a deadlock or unrecoverable state, this endpoint should return a non-200 status code, allowing the orchestration platform to restart the containerautomatically.
+Reserved Environment Variables
+The following environment variables are reserved for system use. Please avoid declaring them in your container code. 
+Image Architecture
+The image must be buit with linux/amd64 platform as example shown below.
+File Access
+The container local file system is readonly, only path /tmp is writable in the file system. Therefore if the code need to write files to local file system, please write to /tmp.
+Vulnerability Scanning
+Before deployment, the image will be scanned via OCI Vulnerability Scanning Service and fail if there is any Critical findings for security concern. Note: We recommend youto use base images provided by OCI container registry https://container-registry.oracle.com/ all images of where passed vulnerability scanning.
+Other restrictions
+The customzed entry point command is not supported at the moment. So please integrate the entry command into Dockerfile using CMD or ENTRYPOINTThe volume mapping is not supported at the moment which means local file persistence is not supported. Please make your service stateless otherwise the local fileswill be gone during redeployment or node replacement.
+Tutorial Prerequisites
+Step 1: Configure IAM Policies
+Before these tutorials, you may need to configure IAM policies to grant the Hosted Deployment with necessary permission, such as pulling images from your OCIR. You alsoneed to grant permissions to your team member with the permissions to use this service.
+1. Create a dynamic group new_application_dynamic_group  for hosted application resource that matches any of the following rules. The resource type`generativeaihostedapplication` would be used by the hosted deployment service for accessing customer resources when launching the application, while the resourcetype generativeaihosteddeployment would be used by the customer container for accessing customer resources when running the container.
+2. Grant access to hosted application resources and change the user group and compartment to your use case
+3. Allow your team member in the specified group to access Hosted Deployment resources.l
+PORT
+K_SERVICE
+K_CONFIGURATION
+K_REVISION
+OCI_RESOURCE_PRINCIPAL_VERSION
+OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM
+OCI_RESOURCE_PRINCIPAL_RPST
+KUBERNETES_*
+all {resource.type='generativeaihostedapplication',resource.compartment.id='your_compartment_id'}
+all {resource.type='generativeaihosteddeployment',resource.compartment.id='your_compartment_id'}
+IAM policy
+Allow service vulnerability-scanning-service to read repos in compartment <your_compartment_name>
+Allow service vulnerability-scanning-service to read compartments in compartment <your_compartment_name>
+// Allow hosted application dynamic group to access OCIR, Vulnerability scanning result
+Allow dynamic-group new_application_dynamic_group to read repos in compartment <your_compartment_name>
+Allow dynamic-group new_application_dynamic_group to read container-scan-results in compartment <your_compartment_name>
+Allow dynamic-group new_application_dynamic_group to read vss-family in compartment <your_compartment_name>
+// Allow your hosted deployment to access Object Storage in your compartment
+Allow dynamic-group new_application_dynamic_group to read object-family in compartment <your_compartment_name>
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 3/9
+Step 2: Get ready to use OCIR
+Before publishing your container image, make sure your local environment can push to OCIR. 
+Note: You must use your account tenancy, which is, for most OCI developers, the bmc_operator_access tenancy where it has all the OCI internal operator'saccount as their GUID.
+1. Login the account tenancy, and find the tenancy namespace in OCI Console > Tenancy > Namespace. For boat user, the namespace is bmc_operator_access .2. Find out the username of the account in OCI Console > Profile > the name of the profile. For boat users, it is your ocid.3. Create an auth token from OCI Console > Profile > Tokens and keys > Auth tokens. Generate a token and save it locally.4. Login from your terminal:
+Step 3: Set up your identity domain and application
+At the moment, OAuth is the only supported authentication type, you must have an application in your identity domain in advance to generate auth token. Then information ofthis domain and its application will be used to setup authentication configuration during Application creation. To learn more about OCI Identity Domain, see here. Below is aquick walkthrough to create an Identity Domain and register an application that will be used later in this tutorial.
+Create an Identity Domain
+Do not miss this configuration, otherwise the endpoint won't be accessible!
+In OCI each tenancy has a default identity domain. You can use that domain or any existing domain as long as its domain type is not "Light weight". If you want to use a newdomain, you can create one.
+1. Sign in to the OCI Console.2. Click the navigation menu (top-left), then select Identity & Security.3. Under Identity, select Domains.4. Click Create domain.5. Provide the required information, such as the domain administrator. For this tutorial, you may choose the Free tier.6. Click Create and wait for the domain to become active.7. In the Domain Settings page, make sure the Configure client access is set to Enabled .
+Create an Application in the Identity Domain
+1. Open the Identity Domain you just created.2. Select the Integrated applications tab.3. Click Add application.4. Choose Confidential Application, then click Launch workflow.5. Provide a Name and Description, leave the remaining fields as default, and click Submit.
+Configure OAuth Settings
+1. Open the application you just created.2. Select OAuth configuration, then click Edit OAuth configuration.3. Enable Configure this application as a resource server now.Provide a Primary audience, for example: https://your_application.com/. Audience means which API is allowed to accept and validate the auth token generatedby identity server. In this specific case, you can input our data plane api, https://application.generativeai.ap-osaka-1.oci.oraclecloud.com/20251112/hostedApplications/. The audience does have to be a fully qualified URL, the goal is to set the identity of the recipient who willverify the Oauth token. You can use any word, for example "medical_agent_application". Click  Add scopes and define a scope name (for example, read, write, invoke). Scope means what permissions does the auth token grant. You can definemultiple scopes in the identity domain integrated application, and hosted application should use one of them to authenticate.4. Enable Configure this application as a client now.Select Client credentials as the grant type.5. Click Submit.6. From the Actions menu (top-right), click Activate to activate the application.
+After activation, return to the application’s main page and click OAuth Configuration. You should see the following values
+Client IDClient secret
+ 
+// Manage applications
+Allow group <your_user_or_dg> to {GENERATIVE_AI_HOSTED_APPLICATION_CREATE, GENERATIVE_AI_HOSTED_APPLICATION_READ, GENERATIVE_AI_HOSTED_APPLICATION_UPDATE, G
+// Manage deployments
+Allow group <your_user_or_dg> to {GENERATIVE_AI_HOSTED_DEPLOYMENT_CREATE, GENERATIVE_AI_HOSTED_DEPLOYMENT_READ, GENERATIVE_AI_HOSTED_DEPLOYMENT_UPDATE, GENE
+// Manage invoke
+Allow group <your_user_or_dg> to {GENERATIVE_AI_HOSTED_DEPLOYMENT_INVOKE} in compartment <your_compartment_name>
+// Manage OCIR image
+Allow group <your_user_or_dg> to read repos in compartment <ocir_image_compartment>
+docker login <region>.ocir.io -u '<tenancy_namespace>/<username>' -p '<auth_token>'
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 4/9
+Primary audienceScope
+In the Identity Domain's main page, you should see the Domain URL. Record these values securely. You will need them later to generate an access token for accessing yourhosted application.
+Tutorial: Open API MCP server
+Preparation
+This tutorial walks through deploying the Open API MCP server with Hosted Deployment.
+The source code is located in the repository folder openapi-mcp-server/. This implementation is a fork of the open source project OpenAPI MCP Server with minor updates tosupport streamable HTTP.
+Step 1. Prepare source package and Docker image
+1. Use the source under openapi-mcp-server/, or directly download from this zip file if you don't have permission to access the repo openapi-mcp-server.zip2. Build the local image from repo root:
+Step 2. Publish the image to OCIR
+Push the image to your OCIR repository (replace namespace/region with your values):
+Note: The namespace is the tenancy namespace you desire to push to and your boat account has permission to do so. This is not necessary to be the same tothe boat tenancy namespace which in most cases it wouldn't. 
+Hosted Application
+Create a Hosted Application in OCI Console for the Open API MCP server image.
+Step 1: Sign in to the OCI Console
+1. Open OCI Console and sign in.2. Select your target region.
+Step 2: Navigate to Hosted Deployments
+1. From the navigation menu, open Analytics & AI.2. Select Generative AI under AI Services.3. Open Applications from the left panel.
+Step 3: Create a New Application
+1. Click Create application.2. Set application name, description, and compartment.
+Step 4: Configure Deployment
+Minimum replicas: 1Maximum replicas: 3
+docker buildx build --platform linux/amd64 -t openapi-mcp-server:v1 --load .
+docker tag openapi-mcp-server:v1 {region}.ocir.io/{your_tenancy_namespace}/openapi-mcp-server:v1
+docker push {region}.ocir.io/{your_tenancy_namespace}/openapi-mcp-server:v1
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 5/9
+Step 5: Configure Environment
+Add the following environment variables for the public Petstore example (as used in the official OpenAPI MCP server docs):
+API_BASE_URL: https://petstore3.swagger.io/api/v3API_SPEC_URL: https://petstore3.swagger.io/api/v3/openapi.json
+Do not enable PostgreSQL for this tutorial.
+Step 6: Configure Networking
+Choose Managed/Default networking mode.Choose Public endpoint type.
+Step 7: Configure Authentication
+Use Identity Domain auth and input the domain, audience, and scope values prepared in Tutorial Prerequisites.
+Step 8: Review and Create
+1. Review all settings.2. Click Create application.
+Hosted Deployment
+Create and activate a deployment from the OCIR image.
+Step 1: Create a Deployment
+1. Open the application.2. Click Create deployment.
+Step 2: Deployment Configuration
+Compartment: choose your target compartment.Repository compartment: the OCIR compartment hosting the image.Repository and Version: select openapi-mcp-server:v1.Deploy and activate: enabled.
+Step 3: Verify Deployment Status
+Wait until deployment status is Active.Record the hosted application invoke endpoint in the Application Details page.
+Invoke MCP Server
+Generate an OAuth token and invoke the MCP Server.
+Use the token with your invoke endpoint to validate MCP server responses.
+Option 1: Curl
+Note: after each curl command, it hangs since it's using streaming http under the hood. You will need to explicitly ctl+c to terminate it.
+Option 2: Python
+You may use the following sample python code as client
+This would return something like:
+export IDCS_DOMAIN_URL="https://<your-domain>.identity.oraclecloud.com:443"
+export IDCS_CLIENT_ID="<client-id>"
+export IDCS_CLIENT_SECRET="<client-secret>"
+export IDCS_SCOPE="<audience><scope>"
+curl -s -X POST "${IDCS_DOMAIN_URL}/oauth2/v1/token" \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=client_credentials" \
+  -d "client_id=${IDCS_CLIENT_ID}" \
+  -d "client_secret=${IDCS_CLIENT_SECRET}" \
+  -d "scope=${IDCS_SCOPE}" | jq .access_token
+call mcp server with curl Expand source
+Python Client for MCP server Expand source
+MCP Client output Expand source
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 6/9
+What You’ve Accomplished
+Built and published Open API MCP server image from openapi-mcp-server/.Created and activated Hosted Application and Deployment.Configured Petstore-backed OpenAPI environment variables.Invoked the hosted endpoint with OAuth authentication.
+Tutorial: Simple LangGraph Agent
+Preparation
+In this section, you’ll follow a step-by-step tutorial to deploy a LangGraph agent and verify that it is running successfully. The example uses a simple LangGraph containerimage, implemented as a minimal FastAPI application with LangGraph and OpenAI, and includes basic weather tool support.
+This tutorial walks you through creating an Application and then launching a Deployment using Hosted Deployment, which is available in the ap-osaka-1 and us-chicago-1 regions.
+By the end of this tutorial, you will have:
+A hosted application createdA deployment running and accessibleA clear understanding of what each step does and why it is required
+Step 1. Prepare the Docker image
+1. You may clone the   source code , or directly copy paste the following source code if lack of the permission to read the repository.
+main.py
+requirements.txt
+ Dockerfile
+2. Following the following instructions to build a Docker image locally (for example simple_langgraph:v1). 
+3. Note: the image must expose the port 8080 to allow it to be corrected routed. 
+Step 2. Publish the image to OCIR
+You can follow the instructions in this blog for publishing the docker image built in the previous step to your own OCIR repository of your preferred tenancy. Below is a sampledocker push command.
+Step 3. (Optional) Launch a private service in your VCN
+If you want to verify outbound networking from a hosted application (for example, your agent calls an internal service), set up a simple target endpoint inside your VCN.
+1. Create a VCN. Follow OCI’s Create a VCN instructions.2. Launch a Compute instance. Follow OCI's Create an Instance instructions.3. Start a simple web service. You may follow the steps in the following block.
+Example Cost Service
+Hosted Application
+You may use OCI Console to create a Hosted Application as a configuration set of your desired image.
+Step 1: Sign in to the OCI Console
+1. Open your browser and go to the OCI Console.2. Sign in with your OCI account.3. Select the correct region, ap-osaka-1 (top-right corner).
+Note: To test services in different environment (e.g., dev, ppe), access the corresponding OCI Staging Console Endpoint listed below.
+Simple Langgraph Example
+simple-langgraph Expand source
+requirements.txt Expand source
+Dockerfile Expand source
+build Expand source
+docker push
+docker push ap-osaka-1.ocir.io/{your_tenancy_namespace}/simple-langgraph:v1
+Demo use case
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 7/9
+OCI Staging Console Endpoint
+Dev https://cloud-staging.oracle.com/ai-service/generative-ai?region=us-chicago-1&telemetry=false&canary=true&configoverride={"featu
+Preprodhttps://cloud-staging.oracle.com/ai-service/generative-ai?region=us-chicago-1&telemetry=false&canary=true&configoverride={"featu
+productionhttps://cloud.oracle.com/?region=us-ashburn-1
+Step 2: Navigate to Hosted Deployments
+1. From the left navigation menu, open Analytics & AI.2. Select Generative AI in AI Services section.3. Click Applications on the left side panel.4. Select your desired compartment, the page will show all the applications in that compartment.
+This is where all your hosted applications live.
+Step 3: Create a New Application
+ Click Create application. On the Basic information page, provide:
+1. Application name. Enter a friendly name (for example: my-first-hosted-app)2. Description. Example: My first hosted deployment application3. Compartment. This defaults to the one you selected earlier, but you can choose another one if needed.
+Click Next.
+Step 4: Configure Deployment
+Use default settings for this tutorial
+Minimum replicas: 1Maximum replicas: 3
+This keeps things simple and cost-effective.
+Click Next.
+Step 5: Configure Environment
+Toggle on the button OCI PostgreSQL, and provide a environment variable name POSTGRESQL_CONNECTION. You must use the exact name for the simple-langgraph image to use.Leave OCI Cache empty for now.Add an environment variable COST_SERVER_HOST, with value the FQDN plus the port no. of the server url you privately launched. For example, if the FQDN is  hd-demo.sub01310741360.hosteddeploymen.oraclevcn.com , the environment variable value would be http://hd-demo.sub01310741360.hosteddeploymen.oraclevcn.com:9000.
+Click Next.
+Step 6: Configure Networking
+Choose Custom for Networking type, and select the VCN and Subnet you've created in the prerequisites.Choose Public as the Endpoint Type
+Click Next.
+Step 7: Configure Authentication
+In previous step "Set up your identity domain and application", you have prepared an integrated application in identity domain. In this configuration you need to input thecorresponding fields. There are three of them. 
+Identity Domain: please select the same identity domain your integrated application belongs to.Scope: go to identity domain console and find out the integrated application you created previously, use one of the scopes you defined previously.Audience: go to identity domain console and find out the integrated application you created previously, select OAuth configuration, copy Primary audience, andpaste here.
+Click Next.
+Step 8: Review and Create
+1. Review all settings2. If everything looks correct, click Create application
+OCI will create the application within minutes depending on what resources you've configured.
+Once finished, aka the application status turns into Active, you’ll be taken to the Application details page.
+Hosted Deployment
+Now that the application exists, it’s time to run it by creating a deployment.
+Step 1: Create a Deployment
+1. Open your newly created application, and open Deployment panel.
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 8/9
+2. Click Create deployment
+Step 2: Deployment Configuration
+Compartment. Choose your preferred compartment. It's recommended to choose the same compartment to your application.Repository compartment. This is the compartment that you have published your application image in.Repository and Version. Choose the target repository name, e.g. simple-langgraph:v1 from the prerequisite example.Deploy and activate. Toggled on this button to make this image directly deployed and activated.
+Click Create deployment. Deployment may take a few minutes.
+Step 3: Verify Deployment Status
+After creation:
+Wait until Status shows Active which indicates your application is ready to invoke.You can find the public endpoint URL in the Details tab of How to Use section. It follows the pattern https://application.generativeai.${region}.oci.oraclecloud.com/20251112/hostedapplications/{hosted_application_ocid}/actions/invoke/{custom_api_endpoint}.
+Your hosted deployment is now running!
+Invoke Application
+Since the underlying authentication type is IDCS, you'll need to generate a bearer token and use it in the Authorization header for making API calls. Use the following script togenerate the access token. Please go to the identity domain console to get the Domain URL from domain details page, CLIENT_ID, CLIENT_SECRET, Primary audience,scope from integrated application OAuth configuration.
+Note that:
+1. The access token has a default expiration time of 1 hour, you will need to call the script again for a new one if it expires.2. The IDCS_SCOPE used in the script is a combination of the audience and scope you've previously configured. E.g if the audience is application, and scope is read, theIDCS_SCOPE here would be applicationread. The audience is recommended to set with a URI with a '/' at the end, so that the combination is easier to read. E.g if theaudience is set to be https://application.com/, and the scope is read, the parameter here to be used would be https://application.com/read
+Once you have the access token, you can use the following curl command to make an API call.
+What You’ve Accomplished
+You successfully:
+Created a hosted applicationLaunched a deploymentAccessed a live endpoint
+For further feature request or bug report, please use 
+GAAS Jira-sd ticket queue#genai-hosted-deployment-users slack channel
+Next Steps (Optional)
+Once you’re comfortable, you can:
+Deploy more sophisticated applications with more environment variablesUse managed storage (Oracle PostgreSQL and OCI Cache)
+OAuthToken Expand source
+Curl Chat Expand source
+No labels
+2 Comments
+Florian Friemel
+Feb 10, 2026 
+hostedapplications
+needs to be hostedApplications
+Dougal Ballantyne
+Mar 23, 2026 
+$2
+Why $2?
+4/2/26, 12:20 PM Hosted Application Customer Onboarding - Oracle Cloud AI Services - ALM Confluence
+https://confluence.oraclecorp.com/confluence/display/OCAS/Hosted+Application+Customer+Onboarding 9/9

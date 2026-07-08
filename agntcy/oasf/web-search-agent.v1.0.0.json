@@ -1,0 +1,80 @@
+{
+  "name": "application/web-search-agent",
+  "schema_version": "1.0.0",
+  "version": "1.0.0",
+  "description": "Runs live web research when document retrieval is not enough.",
+  "authors": [
+    "Mounika"
+  ],
+  "created_at": "2026-03-27T12:30:00Z",
+  "annotations": {
+    "role": "specialist-agent",
+    "owner": "application-mas",
+    "tool_server": "web-server",
+    "identity.agent_id": "ORY-9d7a460d-b05a-46e5-a666-0fae86319d50"
+  },
+  "skills": [
+    {
+      "id": 60102,
+      "name": "retrieval_augmented_generation/retrieval_of_information/retrieval_of_information_search"
+    },
+    {
+      "id": 10306,
+      "name": "natural_language_processing/information_retrieval_synthesis/information_retrieval_synthesis_search"
+    }
+  ],
+  "modules": [
+    {
+      "name": "integration/a2a",
+      "id": 203,
+      "data": {
+        "card_data": {
+          "protocolVersions": [
+            "0.3.0"
+          ],
+          "name": "web-search-agent",
+          "description": "Runs live web research when document retrieval is not enough.",
+          "supportedInterfaces": [
+            {
+              "url": "http://web-search-agent:8033/",
+              "protocolBinding": "HTTP+JSON"
+            }
+          ],
+          "provider": {
+            "url": "http://web-search-agent:8033/",
+            "organization": "Application"
+          },
+          "version": "1.0.0",
+          "capabilities": {
+            "streaming": false
+          },
+          "defaultInputModes": [
+            "text/plain",
+            "application/json"
+          ],
+          "defaultOutputModes": [
+            "application/json",
+            "text/plain"
+          ],
+          "skills": [
+            {
+              "id": "web-search",
+              "name": "Web Search",
+              "description": "Search the web and return grounded live web results.",
+              "tags": [
+                "web",
+                "search",
+                "research",
+                "live"
+              ],
+              "examples": [
+                "{\"question\":\"Latest France capital facts\",\"num_results\":5}"
+              ]
+            }
+          ]
+        },
+        "card_schema_version": "v1.0.0"
+      }
+    }
+  ]
+}

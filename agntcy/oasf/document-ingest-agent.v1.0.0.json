@@ -1,0 +1,80 @@
+{
+  "name": "application/document-ingest-agent",
+  "schema_version": "1.0.0",
+  "version": "1.0.0",
+  "description": "Extracts OCR text and ingests documents into the vector store.",
+  "authors": [
+    "Mounika"
+  ],
+  "created_at": "2026-03-27T12:30:00Z",
+  "annotations": {
+    "role": "specialist-agent",
+    "owner": "application-mas",
+    "tool_server": "ocr-server",
+    "identity.agent_id": "ORY-2296473b-6dc2-4f65-80b5-c6e7667c40ca"
+  },
+  "skills": [
+    {
+      "id": 70101,
+      "name": "multi_modal/image_processing/image_to_text"
+    },
+    {
+      "id": 60101,
+      "name": "retrieval_augmented_generation/retrieval_of_information/indexing"
+    }
+  ],
+  "modules": [
+    {
+      "name": "integration/a2a",
+      "id": 203,
+      "data": {
+        "card_data": {
+          "protocolVersions": [
+            "0.3.0"
+          ],
+          "name": "document-ingest-agent",
+          "description": "Extracts OCR text and ingests documents into the vector store.",
+          "supportedInterfaces": [
+            {
+              "url": "http://document-ingest-agent:8031/",
+              "protocolBinding": "HTTP+JSON"
+            }
+          ],
+          "provider": {
+            "url": "http://document-ingest-agent:8031/",
+            "organization": "Application"
+          },
+          "version": "1.0.0",
+          "capabilities": {
+            "streaming": false
+          },
+          "defaultInputModes": [
+            "text/plain",
+            "application/json"
+          ],
+          "defaultOutputModes": [
+            "application/json",
+            "text/plain"
+          ],
+          "skills": [
+            {
+              "id": "document-ingest",
+              "name": "Document Ingest",
+              "description": "OCR a document and ingest it into the vector store as a document-scoped asset.",
+              "tags": [
+                "document",
+                "ocr",
+                "ingest",
+                "vector-store"
+              ],
+              "examples": [
+                "{\"path\":\"C:\\\\docs\\\\file.pdf\",\"dpi\":300}"
+              ]
+            }
+          ]
+        },
+        "card_schema_version": "v1.0.0"
+      }
+    }
+  ]
+}

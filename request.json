@@ -1,0 +1,13 @@
+{
+  "compartmentId": "ocid1.compartment.oc1..aaaaaaaadg4huvdmy2wyjt2lkg5pl4wmi2gxabxwtckbzyoz7pjggidoau2a",
+  "input": {
+    "type": "TEXT",
+    "content": "My email is test@gmail.com and phone is 9876543210",
+    "languageCode": "en"
+  },
+  "guardrailConfigs": {
+    "contentModerationConfig": {},
+    "personallyIdentifiableInformationConfig": {},
+    "promptInjectionConfig": {}
+  }
+}

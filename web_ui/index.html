@@ -1,0 +1,773 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Application Demo</title>
+  <style>
+    :root {
+      --bg: #f6f2ee;
+      --panel: rgba(255, 255, 255, 0.88);
+      --panel-strong: rgba(255, 255, 255, 0.96);
+      --ink: #1d2327;
+      --muted: #5f696f;
+      --accent: #b74231;
+      --accent-deep: #8d3225;
+      --accent-soft: rgba(183, 66, 49, 0.1);
+      --line: rgba(104, 88, 74, 0.18);
+      --shadow: 0 18px 40px rgba(33, 26, 20, 0.09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at top left, rgba(183, 66, 49, 0.14), transparent 28%),
+        radial-gradient(circle at top right, rgba(79, 128, 136, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f4ef 0%, #eee5dc 100%);
+    }
+
+    .shell {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 28px 18px 42px;
+    }
+
+    .hero,
+    .panel,
+    .response-card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.75fr);
+      gap: 18px;
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(30px, 4vw, 44px);
+      line-height: 0.95;
+      letter-spacing: -0.03em;
+    }
+
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      max-width: 62ch;
+    }
+
+    .meta-stack {
+      display: grid;
+      gap: 12px;
+    }
+
+    .meta-card {
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(104, 88, 74, 0.12);
+    }
+
+    .meta-title {
+      color: var(--muted);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .meta-value {
+      font-size: 14px;
+      word-break: break-word;
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .panel + .panel {
+      margin-top: 18px;
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 22px;
+      line-height: 1.05;
+    }
+
+    .panel-copy {
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .mode-grid {
+      display: grid;
+      gap: 18px;
+    }
+
+    .action-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 10px 16px;
+      font: inherit;
+      cursor: pointer;
+      transition: transform 120ms ease, background-color 120ms ease, opacity 120ms ease;
+    }
+
+    button:hover,
+    button:focus-visible {
+      transform: translateY(-1px);
+    }
+
+    .primary {
+      background: var(--accent);
+      color: white;
+      font-weight: 600;
+    }
+
+    .primary:hover,
+    .primary:focus-visible {
+      background: var(--accent-deep);
+    }
+
+    .secondary {
+      background: rgba(96, 105, 111, 0.12);
+      color: var(--ink);
+    }
+
+    .ghost {
+      background: transparent;
+      color: var(--muted);
+      border: 1px solid rgba(96, 105, 111, 0.18);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .chip {
+      border-radius: 999px;
+      border: 1px solid rgba(104, 88, 74, 0.14);
+      background: rgba(255, 255, 255, 0.68);
+      color: var(--ink);
+      padding: 8px 12px;
+      font-size: 13px;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .tool-card {
+      padding: 16px;
+      border-radius: 18px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(104, 88, 74, 0.12);
+    }
+
+    .tool-card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+    }
+
+    .tool-card p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .tool-card--compare {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+
+    textarea,
+    input[type="text"],
+    input[type="file"] {
+      width: 100%;
+      margin-top: 8px;
+      border-radius: 16px;
+      border: 1px solid rgba(104, 88, 74, 0.18);
+      padding: 13px 14px;
+      font: inherit;
+      color: var(--ink);
+      background: rgba(252, 250, 247, 0.92);
+    }
+
+    textarea {
+      min-height: 140px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      padding: 10px 12px;
+    }
+
+    .hint {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .response-card {
+      padding: 18px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.84), rgba(250, 245, 239, 0.98));
+    }
+
+    .trace-card {
+      margin-top: 16px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(252, 250, 247, 0.92);
+      border: 1px solid rgba(104, 88, 74, 0.12);
+    }
+
+    pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .status {
+      min-height: 22px;
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .status--error {
+      color: #8e2f21;
+    }
+
+    @media (max-width: 980px) {
+      .hero,
+      .workspace,
+      .tool-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .tool-card--compare {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Hosted Runtime</p>
+        <h1>Multi-Agent Application Demo</h1>
+        <p>
+          Use the command composer for path-based local testing, or use the upload tools below for OCR,
+          document Q&A, and comparison through the hosted app endpoints.
+        </p>
+        <div class="chips">
+          <span class="chip">OCR</span>
+          <span class="chip">Document Q&A</span>
+          <span class="chip">Live Web</span>
+          <span class="chip">Document Comparison</span>
+        </div>
+      </div>
+
+      <div class="meta-stack">
+        <div class="meta-card">
+          <div class="meta-title">Conversation Id</div>
+          <div id="conversationId" class="meta-value">Creating session...</div>
+        </div>
+        <div class="meta-card">
+          <div class="meta-title">Last Route</div>
+          <div id="routeValue" class="meta-value">-</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <section class="mode-grid">
+        <section class="panel">
+          <p class="eyebrow">Command Mode</p>
+          <h2>Send a text command</h2>
+          <p class="panel-copy">
+            Keep using the original command-style flow when you want to test path-based prompts or plain web questions.
+          </p>
+
+          <label for="command">Command Or Question</label>
+          <textarea id="command" placeholder='Examples:
+docqa "/app/demo_files/basic-text.pdf" | what are the first and last lines in the document?
+compare "/app/demo_files/basic-text.pdf" with "/app/demo_files/testing.pdf"
+Explain the history of charminar.'></textarea>
+
+          <div class="action-bar">
+            <button id="sendBtn" class="primary">Send Command</button>
+            <button id="clearCommandBtn" class="secondary">Clear Command</button>
+          </div>
+
+          <div class="chips">
+            <button class="chip" data-fill='ocr "/app/demo_files/basic-text.pdf"'>OCR</button>
+            <button class="chip" data-fill='docqa "/app/demo_files/basic-text.pdf" | what are the first and last lines in the document?'>DocQA</button>
+            <button class="chip" data-fill='compare "/app/demo_files/basic-text.pdf" with "/app/demo_files/testing.pdf"'>Compare</button>
+            <button class="chip" data-fill='Explain the history of charminar.'>Web</button>
+          </div>
+        </section>
+
+        <section class="panel">
+          <p class="eyebrow">Upload Mode</p>
+          <h2>Run document flows from the browser</h2>
+          <p class="panel-copy">
+            These tools use the new upload endpoints, so the hosted app can pass document content through the graph without relying on local file paths.
+          </p>
+
+          <div class="tool-grid">
+            <section class="tool-card">
+              <h3>OCR Upload</h3>
+              <p>Upload a file and extract text into the current shared session.</p>
+              <label for="ocrFile">Document</label>
+              <input id="ocrFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.txt">
+              <div class="action-bar">
+                <button id="ocrBtn" class="primary">Run OCR</button>
+              </div>
+            </section>
+
+            <section class="tool-card">
+              <h3>Document Q&amp;A Upload</h3>
+              <p>Upload one document and ask a grounded question against it.</p>
+              <label for="docqaFile">Document</label>
+              <input id="docqaFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.txt">
+              <label for="docqaQuestion">Question</label>
+              <input id="docqaQuestion" type="text" placeholder="What do you want to know from this document?">
+              <div class="action-bar">
+                <button id="docqaBtn" class="primary">Ask Document</button>
+              </div>
+            </section>
+
+            <section class="tool-card tool-card--compare">
+              <h3>Compare Uploads</h3>
+              <p>Upload two documents and get a structured comparison summary.</p>
+              <label for="compareLeftFile">Left document</label>
+              <input id="compareLeftFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.txt">
+              <label for="compareRightFile">Right document</label>
+              <input id="compareRightFile" type="file" accept=".pdf,.png,.jpg,.jpeg,.tif,.tiff,.bmp,.txt">
+              <div class="action-bar">
+                <button id="compareBtn" class="primary">Compare Documents</button>
+              </div>
+            </section>
+          </div>
+
+          <div class="hint">
+            Upload routes currently use inline file transport inside the hosted runtime, so they are best for small and medium demo documents.
+          </div>
+        </section>
+
+        <section class="panel">
+          <p class="eyebrow">Session Tools</p>
+          <h2>Manage the shared conversation</h2>
+          <p class="panel-copy">
+            All actions above reuse the same conversation id until you start a fresh session.
+          </p>
+          <div class="action-bar">
+            <button id="newSessionBtn" class="secondary">New Session</button>
+            <button id="clearResponseBtn" class="ghost">Clear Response</button>
+          </div>
+          <div id="status" class="status"></div>
+        </section>
+      </section>
+
+      <aside class="panel">
+        <p class="eyebrow">Latest Result</p>
+        <h2>Response Panel</h2>
+        <p class="panel-copy">
+          The hosted runtime returns the latest answer and route here, whether it came from command mode or an upload flow.
+        </p>
+
+        <section class="response-card">
+          <pre id="responseBox">No response yet.</pre>
+        </section>
+
+        <section class="trace-card">
+          <p class="eyebrow">Execution Trace</p>
+          <pre id="traceBox">No trace yet.</pre>
+        </section>
+      </aside>
+    </div>
+  </div>
+
+  <script>
+    const commandEl = document.getElementById("command");
+    const sendBtn = document.getElementById("sendBtn");
+    const clearCommandBtn = document.getElementById("clearCommandBtn");
+    const newSessionBtn = document.getElementById("newSessionBtn");
+    const clearResponseBtn = document.getElementById("clearResponseBtn");
+    const statusEl = document.getElementById("status");
+    const conversationEl = document.getElementById("conversationId");
+    const routeEl = document.getElementById("routeValue");
+    const responseEl = document.getElementById("responseBox");
+    const traceEl = document.getElementById("traceBox");
+
+    const ocrFileEl = document.getElementById("ocrFile");
+    const ocrBtn = document.getElementById("ocrBtn");
+
+    const docqaFileEl = document.getElementById("docqaFile");
+    const docqaQuestionEl = document.getElementById("docqaQuestion");
+    const docqaBtn = document.getElementById("docqaBtn");
+
+    const compareLeftFileEl = document.getElementById("compareLeftFile");
+    const compareRightFileEl = document.getElementById("compareRightFile");
+    const compareBtn = document.getElementById("compareBtn");
+
+    let conversationId = "";
+    let sessionAvailable = true;
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message || "";
+      statusEl.className = isError ? "status status--error" : "status";
+    }
+
+    function renderTrace(trace) {
+      if (!Array.isArray(trace) || !trace.length) {
+        traceEl.textContent = "No trace yet.";
+        return;
+      }
+
+      traceEl.textContent = trace.map((entry, index) => {
+        const header = `${index + 1}. [${entry.stage || "unknown"}] ${entry.title || "(no title)"}`;
+        const fields = entry.fields && typeof entry.fields === "object"
+          ? Object.entries(entry.fields).map(([key, value]) => `   ${key}: ${JSON.stringify(value)}`).join("\n")
+          : "";
+        return fields ? `${header}\n${fields}` : header;
+      }).join("\n\n");
+    }
+
+    function setResponse(route, answer, trace) {
+      routeEl.textContent = route || "-";
+      responseEl.textContent = answer || "(empty response)";
+      renderTrace(trace);
+    }
+
+    function lockButtons(locked) {
+      [
+        sendBtn,
+        ocrBtn,
+        docqaBtn,
+        compareBtn,
+        newSessionBtn,
+        clearCommandBtn,
+        clearResponseBtn
+      ].forEach((button) => {
+        button.disabled = locked;
+      });
+    }
+
+    async function readResponsePayload(response) {
+      const rawText = await response.text();
+      let data = null;
+      if (rawText) {
+        try {
+          data = JSON.parse(rawText);
+        } catch {
+          data = rawText;
+        }
+      }
+      return { rawText, data };
+    }
+
+    async function createSession() {
+      setStatus("Creating session...");
+      const response = await fetch("/sessions", { method: "POST" });
+      const { rawText, data } = await readResponsePayload(response);
+      if (!response.ok) {
+        sessionAvailable = false;
+        conversationId = "";
+        conversationEl.textContent = "Stateless mode";
+        routeEl.textContent = "-";
+        const message =
+          data && typeof data === "object" && data.detail
+            ? data.detail
+            : rawText || "Could not create session.";
+        setStatus("Session unavailable. Running without saved conversation.", true);
+        responseEl.textContent = message;
+        return;
+      }
+      if (!data || typeof data !== "object") {
+        throw new Error("Session endpoint returned an unexpected response.");
+      }
+      if (data.conversation_available === false && data.conversation_id) {
+        sessionAvailable = false;
+        conversationId = data.conversation_id;
+        conversationEl.textContent = `${conversationId} (local)`;
+        routeEl.textContent = "-";
+        setStatus("OCI session unavailable. Using local session memory.", true);
+        responseEl.textContent = String(data.detail || "Continuing with local session memory.");
+        return;
+      }
+      if (!data.conversation_id) {
+        sessionAvailable = false;
+        conversationId = "";
+        conversationEl.textContent = "Stateless mode";
+        routeEl.textContent = "-";
+        setStatus("Session unavailable. Running without saved conversation.", true);
+        responseEl.textContent = String(data.detail || "Continuing in stateless mode.");
+        return;
+      }
+      sessionAvailable = true;
+      conversationId = data.conversation_id || "";
+      conversationEl.textContent = conversationId || "(not available)";
+      routeEl.textContent = "-";
+      setStatus("Session ready.");
+    }
+
+    async function parseJsonResponse(response) {
+      const { rawText, data } = await readResponsePayload(response);
+      if (!response.ok) {
+        const message =
+          data && typeof data === "object" && data.detail
+            ? data.detail
+            : rawText || "Request failed.";
+        throw new Error(message);
+      }
+      if (!data || typeof data !== "object") {
+        throw new Error(rawText || "Request returned an unexpected response.");
+      }
+      return data;
+    }
+
+    function applyInvokeResult(data) {
+      conversationId = data.conversation_id || conversationId;
+      conversationEl.textContent = conversationId || (sessionAvailable ? "(not available)" : "Stateless mode");
+      setResponse(data.route, data.final_answer, data.trace);
+      setStatus("Completed.");
+    }
+
+    async function fileToInlinePayload(file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      const chunkSize = 0x8000;
+      const parts = [];
+      for (let index = 0; index < bytes.length; index += chunkSize) {
+        const chunk = bytes.subarray(index, index + chunkSize);
+        parts.push(String.fromCharCode(...chunk));
+      }
+      return {
+        type: "inline",
+        filename: file.name || "upload.bin",
+        name: file.name || "upload.bin",
+        content_type: file.type || "application/octet-stream",
+        content_base64: btoa(parts.join(""))
+      };
+    }
+
+    async function invokeTextCommand() {
+      const userInput = commandEl.value.trim();
+      if (!userInput) {
+        setStatus("Enter a command or a question first.", true);
+        return;
+      }
+
+      lockButtons(true);
+      setStatus("Running command...");
+      setResponse(routeEl.textContent, "Waiting for response...", []);
+
+      try {
+        const response = await fetch("/invoke", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_input: userInput,
+            conversation_id: conversationId || null,
+            return_state: false
+          })
+        });
+        applyInvokeResult(await parseJsonResponse(response));
+      } catch (error) {
+        setStatus("Command failed.", true);
+        responseEl.textContent = String(error.message || error);
+      } finally {
+        lockButtons(false);
+      }
+    }
+
+    async function invokeUpload({ endpoint, files, fields, progressMessage }) {
+      lockButtons(true);
+      setStatus(progressMessage || "Uploading...");
+      setResponse(routeEl.textContent, "Waiting for response...", []);
+
+      try {
+        const payload = {
+          conversation_id: conversationId || null,
+          return_state: false
+        };
+        for (const [fieldName, file] of Object.entries(files)) {
+          payload[fieldName] = await fileToInlinePayload(file);
+        }
+        Object.entries(fields || {}).forEach(([key, value]) => {
+          payload[key] = value;
+        });
+
+        const response = await fetch(endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        applyInvokeResult(await parseJsonResponse(response));
+      } catch (error) {
+        setStatus("Upload request failed.", true);
+        responseEl.textContent = String(error.message || error);
+      } finally {
+        lockButtons(false);
+      }
+    }
+
+    sendBtn.addEventListener("click", invokeTextCommand);
+
+    clearCommandBtn.addEventListener("click", () => {
+      commandEl.value = "";
+      setStatus("Command cleared.");
+    });
+
+    clearResponseBtn.addEventListener("click", () => {
+      setResponse("-", "No response yet.", []);
+      setStatus("Response cleared.");
+    });
+
+    newSessionBtn.addEventListener("click", async () => {
+      lockButtons(true);
+      responseEl.textContent = "No response yet.";
+      try {
+        await createSession();
+      } catch (error) {
+        setStatus("Session creation failed.", true);
+        responseEl.textContent = String(error.message || error);
+        conversationEl.textContent = "(failed)";
+      } finally {
+        lockButtons(false);
+      }
+    });
+
+    ocrBtn.addEventListener("click", async () => {
+      const file = ocrFileEl.files?.[0];
+      if (!file) {
+        setStatus("Choose a document for OCR first.", true);
+        return;
+      }
+      await invokeUpload({
+        endpoint: "/invoke/ocr",
+        files: { file },
+        progressMessage: "Running OCR upload..."
+      });
+    });
+
+    docqaBtn.addEventListener("click", async () => {
+      const file = docqaFileEl.files?.[0];
+      const question = docqaQuestionEl.value.trim();
+      if (!file) {
+        setStatus("Choose a document for document Q&A first.", true);
+        return;
+      }
+      if (!question) {
+        setStatus("Enter a question for the uploaded document.", true);
+        return;
+      }
+      await invokeUpload({
+        endpoint: "/invoke/docqa",
+        files: { file },
+        fields: { question },
+        progressMessage: "Running document Q&A upload..."
+      });
+    });
+
+    compareBtn.addEventListener("click", async () => {
+      const leftFile = compareLeftFileEl.files?.[0];
+      const rightFile = compareRightFileEl.files?.[0];
+      if (!leftFile || !rightFile) {
+        setStatus("Choose both documents before running compare.", true);
+        return;
+      }
+      await invokeUpload({
+        endpoint: "/invoke/compare",
+        files: {
+          left_file: leftFile,
+          right_file: rightFile
+        },
+        progressMessage: "Running comparison upload..."
+      });
+    });
+
+    commandEl.addEventListener("keydown", (event) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        invokeTextCommand();
+      }
+    });
+
+    document.querySelectorAll(".chip[data-fill]").forEach((button) => {
+      button.addEventListener("click", () => {
+        commandEl.value = button.dataset.fill || "";
+        commandEl.focus();
+      });
+    });
+
+    createSession().catch((error) => {
+      sessionAvailable = false;
+      conversationEl.textContent = "Stateless mode";
+      setStatus("Session unavailable. Running without saved conversation.", true);
+      responseEl.textContent = String(error.message || error);
+    });
+  </script>
+</body>
+</html>

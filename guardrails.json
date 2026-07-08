@@ -1,0 +1,9 @@
+{
+  "contentModerationConfig": {
+    "categories": ["HATE", "VIOLENCE"]
+  },
+  "personallyIdentifiableInformationConfig": {
+    "types": ["EMAIL", "PHONE"]
+  },
+  "promptInjectionConfig": {}
+}

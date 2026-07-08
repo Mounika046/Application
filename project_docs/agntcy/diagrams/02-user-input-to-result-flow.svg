@@ -1,0 +1,127 @@
+<svg width="1900" height="1200" viewBox="0 0 1900 1200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f6f1e7; }
+      .panel { fill: #fffdfa; stroke: #d5cec1; stroke-width: 2; }
+      .shared { fill: #e7eff8; stroke: #a8bfd7; stroke-width: 2; }
+      .doc { fill: #e8f2e3; stroke: #b2caa4; stroke-width: 2; }
+      .web { fill: #efe7f8; stroke: #c6b4db; stroke-width: 2; }
+      .compare { fill: #f7e7d8; stroke: #d1b499; stroke-width: 2; }
+      .result { fill: #ece7f5; stroke: #c5bbd8; stroke-width: 2; }
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .subtitle { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #556577; }
+      .section { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .box { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .text { font: 400 15px 'Segoe UI', Arial, sans-serif; fill: #495a6a; }
+      .line { stroke: #66788a; stroke-width: 3; fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#66788a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1900" height="1200"/>
+
+  <text x="60" y="70" class="title">User Input To Result Flow</text>
+  <text x="60" y="104" class="subtitle">Shared routing first, then the document, web, or comparison path that matches the input</text>
+
+  <rect class="panel" x="50" y="140" width="1800" height="210" rx="24"/>
+  <text x="85" y="186" class="section">Shared front half for every request</text>
+
+  <rect class="shared" x="90" y="240" width="210" height="72" rx="16"/>
+  <text x="122" y="283" class="box">1. User input</text>
+
+  <rect class="shared" x="360" y="240" width="250" height="72" rx="16"/>
+  <text x="392" y="283" class="box">2. graph_app.py route</text>
+
+  <rect class="shared" x="670" y="240" width="280" height="72" rx="16"/>
+  <text x="702" y="283" class="box">3. AGNTCY discovery search</text>
+
+  <rect class="shared" x="1010" y="240" width="290" height="72" rx="16"/>
+  <text x="1042" y="283" class="box">4. Identity verification</text>
+
+  <rect class="shared" x="1360" y="240" width="220" height="72" rx="16"/>
+  <text x="1392" y="283" class="box">5. A2A invoke</text>
+
+  <rect class="shared" x="1640" y="240" width="160" height="72" rx="16"/>
+  <text x="1672" y="283" class="box">6. Result</text>
+
+  <line class="line" x1="300" y1="276" x2="360" y2="276" marker-end="url(#arrow)"/>
+  <line class="line" x1="610" y1="276" x2="670" y2="276" marker-end="url(#arrow)"/>
+  <line class="line" x1="950" y1="276" x2="1010" y2="276" marker-end="url(#arrow)"/>
+  <line class="line" x1="1300" y1="276" x2="1360" y2="276" marker-end="url(#arrow)"/>
+  <line class="line" x1="1580" y1="276" x2="1640" y2="276" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="50" y="390" width="560" height="750" rx="24"/>
+  <text x="85" y="436" class="section">Document question route</text>
+
+  <rect class="doc" x="100" y="505" width="460" height="88" rx="18"/>
+  <text x="132" y="540" class="box">Input</text>
+  <text x="132" y="568" class="text">docqa "file.pdf" | question</text>
+
+  <rect class="doc" x="100" y="645" width="460" height="88" rx="18"/>
+  <text x="132" y="680" class="box">document-ingest-agent</text>
+  <text x="132" y="708" class="text">OCR text is extracted and stored in the configured OCI vector store</text>
+
+  <rect class="doc" x="100" y="785" width="460" height="88" rx="18"/>
+  <text x="132" y="820" class="box">kb-query-agent</text>
+  <text x="132" y="848" class="text">vector-store search runs for that document and prepares grounded context</text>
+
+  <rect class="result" x="100" y="925" width="460" height="150" rx="18"/>
+  <text x="132" y="960" class="box">Returned answer</text>
+  <text x="132" y="988" class="text">OCI Responses answers only from retrieved chunks.</text>
+  <text x="132" y="1014" class="text">The current app returns the grounded document answer directly,</text>
+  <text x="132" y="1040" class="text">instead of sending it through a second generic rewrite step.</text>
+
+  <line class="line" x1="330" y1="593" x2="330" y2="645" marker-end="url(#arrow)"/>
+  <line class="line" x1="330" y1="733" x2="330" y2="785" marker-end="url(#arrow)"/>
+  <line class="line" x1="330" y1="873" x2="330" y2="925" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="670" y="390" width="560" height="750" rx="24"/>
+  <text x="705" y="436" class="section">Web question route</text>
+
+  <rect class="web" x="720" y="505" width="460" height="88" rx="18"/>
+  <text x="752" y="540" class="box">Input</text>
+  <text x="752" y="568" class="text">any general question that needs live web results</text>
+
+  <rect class="web" x="720" y="645" width="460" height="88" rx="18"/>
+  <text x="752" y="680" class="box">web-search-agent</text>
+  <text x="752" y="708" class="text">OCI Responses decides to call the remote MCP search tool</text>
+
+  <rect class="web" x="720" y="785" width="460" height="88" rx="18"/>
+  <text x="752" y="820" class="box">OCI hosted web search result</text>
+  <text x="752" y="848" class="text">the agent returns grounded live text from the hosted SerpApi MCP server</text>
+
+  <rect class="result" x="720" y="925" width="460" height="150" rx="18"/>
+  <text x="752" y="960" class="box">Returned answer</text>
+  <text x="752" y="988" class="text">The current runtime sends the grounded web text back directly.</text>
+  <text x="752" y="1014" class="text">There is no extra final-model rewrite in the pure web path.</text>
+
+  <line class="line" x1="950" y1="593" x2="950" y2="645" marker-end="url(#arrow)"/>
+  <line class="line" x1="950" y1="733" x2="950" y2="785" marker-end="url(#arrow)"/>
+  <line class="line" x1="950" y1="873" x2="950" y2="925" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="1290" y="390" width="560" height="750" rx="24"/>
+  <text x="1325" y="436" class="section">Comparison route</text>
+
+  <rect class="compare" x="1340" y="505" width="460" height="88" rx="18"/>
+  <text x="1372" y="540" class="box">Input</text>
+  <text x="1372" y="568" class="text">compare "a.pdf" with "b.pdf"</text>
+
+  <rect class="compare" x="1340" y="645" width="460" height="88" rx="18"/>
+  <text x="1372" y="680" class="box">OCR and input preparation</text>
+  <text x="1372" y="708" class="text">both files are OCRed first through the ingest side of the app</text>
+
+  <rect class="compare" x="1340" y="785" width="460" height="88" rx="18"/>
+  <text x="1372" y="820" class="box">comparison-agent</text>
+  <text x="1372" y="848" class="text">OCI reasoning returns structured differences, similarities, additions and risks</text>
+
+  <rect class="result" x="1340" y="925" width="460" height="150" rx="18"/>
+  <text x="1372" y="960" class="box">Returned answer</text>
+  <text x="1372" y="988" class="text">The user gets a formatted comparison summary with clear sections.</text>
+  <text x="1372" y="1014" class="text">Large inputs are trimmed safely before the comparison call.</text>
+
+  <line class="line" x1="1570" y1="593" x2="1570" y2="645" marker-end="url(#arrow)"/>
+  <line class="line" x1="1570" y1="733" x2="1570" y2="785" marker-end="url(#arrow)"/>
+  <line class="line" x1="1570" y1="873" x2="1570" y2="925" marker-end="url(#arrow)"/>
+</svg>

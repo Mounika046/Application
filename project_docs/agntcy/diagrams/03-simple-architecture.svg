@@ -1,0 +1,126 @@
+<svg width="1800" height="1180" viewBox="0 0 1800 1180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f6f1e7; }
+      .panel { fill: #fffdfa; stroke: #d5cec1; stroke-width: 2; }
+      .user { fill: #e7eff8; stroke: #a8bfd7; stroke-width: 2; }
+      .core { fill: #e8f2e3; stroke: #b2caa4; stroke-width: 2; }
+      .agent { fill: #f7e7d8; stroke: #d1b499; stroke-width: 2; }
+      .ext { fill: #ece7f5; stroke: #c5bbd8; stroke-width: 2; }
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .subtitle { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #556577; }
+      .section { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .box { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .text { font: 400 15px 'Segoe UI', Arial, sans-serif; fill: #495a6a; }
+      .line { stroke: #66788a; stroke-width: 3; fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#66788a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1180"/>
+
+  <text x="60" y="70" class="title">Simple Architecture View</text>
+  <text x="60" y="104" class="subtitle">Big-picture layout of the current application, agents, AGNTCY trust layer, and OCI services</text>
+
+  <rect class="panel" x="50" y="140" width="250" height="860" rx="24"/>
+  <text x="85" y="186" class="section">User side</text>
+
+  <rect class="user" x="90" y="250" width="170" height="86" rx="16"/>
+  <text x="120" y="288" class="box">CLI user</text>
+  <text x="120" y="314" class="text">main.py</text>
+
+  <rect class="user" x="90" y="390" width="170" height="86" rx="16"/>
+  <text x="120" y="428" class="box">Hosted caller</text>
+  <text x="120" y="454" class="text">HTTP /invoke</text>
+
+  <rect class="user" x="90" y="530" width="170" height="86" rx="16"/>
+  <text x="120" y="568" class="box">OCR input</text>
+  <text x="120" y="594" class="text">one file path</text>
+
+  <rect class="user" x="90" y="670" width="170" height="86" rx="16"/>
+  <text x="120" y="708" class="box">DocQA input</text>
+  <text x="120" y="734" class="text">file plus question</text>
+
+  <rect class="user" x="90" y="810" width="170" height="86" rx="16"/>
+  <text x="120" y="848" class="box">Compare input</text>
+  <text x="120" y="874" class="text">two file paths</text>
+
+  <rect class="panel" x="340" y="140" width="520" height="860" rx="24"/>
+  <text x="375" y="186" class="section">Core application runtime</text>
+
+  <rect class="core" x="395" y="250" width="410" height="92" rx="18"/>
+  <text x="427" y="288" class="box">graph_app.py</text>
+  <text x="427" y="316" class="text">routes the request into OCR, document question, web, or compare flow</text>
+
+  <rect class="core" x="395" y="390" width="410" height="92" rx="18"/>
+  <text x="427" y="428" class="box">agents/orchestrator_agent.py</text>
+  <text x="427" y="456" class="text">discovery, identity check, A2A calls, and final answer shaping</text>
+
+  <rect class="core" x="395" y="530" width="410" height="92" rx="18"/>
+  <text x="427" y="568" class="box">A2A helpers and MCP runtime</text>
+  <text x="427" y="596" class="text">shared request transport, OCR tool access, result parsing</text>
+
+  <rect class="core" x="395" y="670" width="410" height="92" rx="18"/>
+  <text x="427" y="708" class="box">OCI helper layer</text>
+  <text x="427" y="736" class="text">responses, retrieval, embeddings, guardrails, conversation creation</text>
+
+  <rect class="core" x="395" y="810" width="410" height="92" rx="18"/>
+  <text x="427" y="848" class="box">Config and state</text>
+  <text x="427" y="876" class="text">ports, URLs, OCI project, vector store id, identity settings, session state</text>
+
+  <rect class="panel" x="900" y="140" width="360" height="860" rx="24"/>
+  <text x="935" y="186" class="section">Agent layer</text>
+
+  <rect class="agent" x="955" y="250" width="250" height="86" rx="16"/>
+  <text x="987" y="288" class="box">document-ingest-agent</text>
+  <text x="987" y="314" class="text">OCR plus storage</text>
+
+  <rect class="agent" x="955" y="390" width="250" height="86" rx="16"/>
+  <text x="987" y="428" class="box">kb-query-agent</text>
+  <text x="987" y="454" class="text">grounded document answer</text>
+
+  <rect class="agent" x="955" y="530" width="250" height="86" rx="16"/>
+  <text x="987" y="568" class="box">web-search-agent</text>
+  <text x="987" y="594" class="text">live web lookup</text>
+
+  <rect class="agent" x="955" y="670" width="250" height="86" rx="16"/>
+  <text x="987" y="708" class="box">comparison-agent</text>
+  <text x="987" y="734" class="text">structured compare output</text>
+
+  <rect class="agent" x="955" y="810" width="250" height="86" rx="16"/>
+  <text x="987" y="848" class="box">ocr-server</text>
+  <text x="987" y="874" class="text">local OCR MCP tool</text>
+
+  <rect class="panel" x="1300" y="140" width="450" height="860" rx="24"/>
+  <text x="1335" y="186" class="section">Trust and service layer</text>
+
+  <rect class="ext" x="1355" y="230" width="340" height="86" rx="16"/>
+  <text x="1387" y="268" class="box">AGNTCY Directory</text>
+  <text x="1387" y="294" class="text">finds the right agent record by capability</text>
+
+  <rect class="ext" x="1355" y="350" width="340" height="86" rx="16"/>
+  <text x="1387" y="388" class="box">AGNTCY Identity</text>
+  <text x="1387" y="414" class="text">verifies hosted badge before invocation</text>
+
+  <rect class="ext" x="1355" y="470" width="340" height="86" rx="16"/>
+  <text x="1387" y="508" class="box">OCI Responses and Conversations</text>
+  <text x="1387" y="534" class="text">reasoning, tool calling, session memory</text>
+
+  <rect class="ext" x="1355" y="590" width="340" height="86" rx="16"/>
+  <text x="1387" y="628" class="box">OCI Files and Vector Store</text>
+  <text x="1387" y="654" class="text">managed storage and retrieval for documents</text>
+
+  <rect class="ext" x="1355" y="710" width="340" height="86" rx="16"/>
+  <text x="1387" y="748" class="box">OCI Remote MCP</text>
+  <text x="1387" y="774" class="text">hosted search tool connection</text>
+
+  <rect class="ext" x="1355" y="830" width="340" height="86" rx="16"/>
+  <text x="1387" y="868" class="box">OCI guardrails, embeddings, containers</text>
+  <text x="1387" y="894" class="text">supporting services used in comparison and response handling</text>
+
+  <rect class="panel" x="50" y="1030" width="1700" height="110" rx="24"/>
+  <text x="85" y="1076" class="section">Architecture summary</text>
+  <text x="85" y="1112" class="text">The app routes each request, discovers the right agent through AGNTCY, verifies trust through AGNTCY Identity, and then lets that agent use OCI Generative AI services for reasoning, retrieval, web tool access, or comparison work.</text>
+</svg>

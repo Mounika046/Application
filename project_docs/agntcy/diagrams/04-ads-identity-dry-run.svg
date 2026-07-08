@@ -1,0 +1,93 @@
+<svg width="1800" height="1120" viewBox="0 0 1800 1120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f6f1e7; }
+      .panel { fill: #fffdfa; stroke: #d5cec1; stroke-width: 2; }
+      .step { fill: #e7eff8; stroke: #a8bfd7; stroke-width: 2; }
+      .data { fill: #e8f2e3; stroke: #b2caa4; stroke-width: 2; }
+      .verify { fill: #f7e7d8; stroke: #d1b499; stroke-width: 2; }
+      .result { fill: #ece7f5; stroke: #c5bbd8; stroke-width: 2; }
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .subtitle { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #556577; }
+      .section { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .box { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .text { font: 400 15px 'Segoe UI', Arial, sans-serif; fill: #495a6a; }
+      .mono { font: 400 14px Consolas, monospace; fill: #495a6a; }
+      .line { stroke: #66788a; stroke-width: 3; fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#66788a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1120"/>
+
+  <text x="60" y="70" class="title">AGNTCY Discovery And Identity Dry Run</text>
+  <text x="60" y="104" class="subtitle">Example of how the app selects comparison-agent and verifies trust before calling it</text>
+
+  <rect class="panel" x="50" y="140" width="1700" height="920" rx="24"/>
+  <text x="85" y="186" class="section">Example request: compare "a.pdf" with "b.pdf"</text>
+
+  <rect class="step" x="110" y="250" width="240" height="92" rx="18"/>
+  <text x="142" y="288" class="box">1. User request</text>
+  <text x="142" y="316" class="text">compare "a.pdf" with "b.pdf"</text>
+
+  <rect class="step" x="410" y="250" width="300" height="92" rx="18"/>
+  <text x="442" y="288" class="box">2. Discovery policy</text>
+  <text x="442" y="316" class="text">comparison route picks comparison skills</text>
+
+  <rect class="step" x="770" y="250" width="300" height="92" rx="18"/>
+  <text x="802" y="288" class="box">3. Directory search</text>
+  <text x="802" y="316" class="mono">dirctl search ...</text>
+
+  <rect class="step" x="1130" y="250" width="300" height="92" rx="18"/>
+  <text x="1162" y="288" class="box">4. Candidate match</text>
+  <text x="1162" y="316" class="text">record for application/comparison-agent</text>
+
+  <rect class="step" x="1490" y="250" width="180" height="92" rx="18"/>
+  <text x="1522" y="288" class="box">5. Select</text>
+  <text x="1522" y="316" class="text">best agent</text>
+
+  <line class="line" x1="350" y1="296" x2="410" y2="296" marker-end="url(#arrow)"/>
+  <line class="line" x1="710" y1="296" x2="770" y2="296" marker-end="url(#arrow)"/>
+  <line class="line" x1="1070" y1="296" x2="1130" y2="296" marker-end="url(#arrow)"/>
+  <line class="line" x1="1430" y1="296" x2="1490" y2="296" marker-end="url(#arrow)"/>
+
+  <rect class="data" x="110" y="410" width="1560" height="170" rx="22"/>
+  <text x="145" y="455" class="section">Directory record data passed into verification</text>
+  <text x="145" y="500" class="mono">subject_id = comparison-agent</text>
+  <text x="145" y="530" class="mono">endpoint_url = http://comparison-agent:8034</text>
+  <text x="145" y="560" class="mono">identity metadata id = ORY-a04fe14b-42f9-49f6-8304-5e75a8319c37</text>
+
+  <rect class="verify" x="110" y="650" width="260" height="100" rx="18"/>
+  <text x="142" y="688" class="box">6. Start verify_subject</text>
+  <text x="142" y="716" class="text">subject = comparison-agent</text>
+
+  <rect class="verify" x="430" y="650" width="290" height="100" rx="18"/>
+  <text x="462" y="688" class="box">7. Read identity id</text>
+  <text x="462" y="716" class="text">use hosted badge metadata from the record</text>
+
+  <rect class="verify" x="780" y="650" width="300" height="100" rx="18"/>
+  <text x="812" y="688" class="box">8. Hosted badge check</text>
+  <text x="812" y="716" class="text">badge must exist, be published, and be valid</text>
+
+  <rect class="verify" x="1140" y="650" width="260" height="100" rx="18"/>
+  <text x="1172" y="688" class="box">9. Trust decision</text>
+  <text x="1172" y="716" class="text">verified = true</text>
+
+  <rect class="verify" x="1460" y="650" width="210" height="100" rx="18"/>
+  <text x="1492" y="688" class="box">10. Allow call</text>
+  <text x="1492" y="716" class="text">invoke A2A</text>
+
+  <line class="line" x1="370" y1="700" x2="430" y2="700" marker-end="url(#arrow)"/>
+  <line class="line" x1="720" y1="700" x2="780" y2="700" marker-end="url(#arrow)"/>
+  <line class="line" x1="1080" y1="700" x2="1140" y2="700" marker-end="url(#arrow)"/>
+  <line class="line" x1="1400" y1="700" x2="1460" y2="700" marker-end="url(#arrow)"/>
+
+  <rect class="result" x="410" y="840" width="900" height="130" rx="22"/>
+  <text x="445" y="878" class="box">11. Actual comparison invocation</text>
+  <text x="445" y="906" class="text">Only after verification passes, the orchestrator sends the prepared payload to the agent endpoint.</text>
+  <text x="445" y="934" class="mono">POST http://comparison-agent:8034</text>
+
+  <path class="line" d="M 1565 750 L 1565 905 L 1310 905" marker-end="url(#arrow)"/>
+</svg>

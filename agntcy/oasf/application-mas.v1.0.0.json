@@ -1,0 +1,30 @@
+{
+  "schema_version": "1.0.0",
+  "name": "application/application-mas",
+  "version": "1.0.0",
+  "description": "A LangGraph-based multi-agent application that orchestrates document storage, document answers, comparison, and live web research through A2A agents and OCR tooling.",
+  "authors": [
+    "Mounika"
+  ],
+  "created_at": "2026-03-27T12:30:00Z",
+  "annotations": {
+    "type": "langgraph",
+    "entrypoint": "application-main",
+    "agents": "document-ingest-agent,kb-query-agent,web-search-agent,comparison-agent",
+    "mcp_servers": "ocr-server"
+  },
+  "skills": [
+    {
+      "id": 70101,
+      "name": "multi_modal/image_processing/image_to_text"
+    },
+    {
+      "id": 602,
+      "name": "retrieval_augmented_generation/document_or_database_question_answering"
+    },
+    {
+      "id": 60102,
+      "name": "retrieval_augmented_generation/retrieval_of_information/retrieval_of_information_search"
+    }
+  ]
+}

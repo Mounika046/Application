@@ -1,0 +1,12 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /app
+
+COPY proxy_app.py /app/proxy_app.py
+
+EXPOSE 8090
+
+CMD ["python", "proxy_app.py"]

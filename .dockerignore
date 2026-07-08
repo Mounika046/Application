@@ -1,0 +1,15 @@
+.git
+.venv
+.idea
+.vscode
+.tmp
+project_docs
+scripts
+__pycache__/
+*/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+*.log
+agntcy - Shortcut.lnk

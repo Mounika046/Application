@@ -1,0 +1,22 @@
+__pycache__/
+*.py[cod]
+.venv/
+.idea/
+.vscode/
+.env
+.env.*
+!.env.example
+!.env.agntcy.example
+*.pem
+*.key
+*.p8
+*.log
+.tmp/
+tmp/
+uploads/
+.env.agntcy.local
+agntcy/agentic-service-keys.local.json
+agntcy/bin/dirctl.exe
+agntcy/bin/dirctl-linux
+agents cid
+agents keys

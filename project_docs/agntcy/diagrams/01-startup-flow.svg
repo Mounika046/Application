@@ -1,0 +1,113 @@
+<svg width="1800" height="1180" viewBox="0 0 1800 1180" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bg { fill: #f6f1e7; }
+      .panel { fill: #fffdfa; stroke: #d5cec1; stroke-width: 2; }
+      .stage { fill: #e7eff8; stroke: #a8bfd7; stroke-width: 2; }
+      .runtime { fill: #e8f2e3; stroke: #b2caa4; stroke-width: 2; }
+      .agent { fill: #f7e7d8; stroke: #d1b499; stroke-width: 2; }
+      .service { fill: #ece7f5; stroke: #c5bbd8; stroke-width: 2; }
+      .title { font: 700 34px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .subtitle { font: 400 18px 'Segoe UI', Arial, sans-serif; fill: #556577; }
+      .section { font: 700 22px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .box { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #233647; }
+      .text { font: 400 15px 'Segoe UI', Arial, sans-serif; fill: #495a6a; }
+      .line { stroke: #66788a; stroke-width: 3; fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#66788a"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1800" height="1180"/>
+
+  <text x="60" y="70" class="title">Application Startup Flow</text>
+  <text x="60" y="104" class="subtitle">Startup sequence and the runtime capabilities that become available before request execution begins</text>
+
+  <rect class="panel" x="50" y="140" width="1700" height="180" rx="24"/>
+  <text x="85" y="186" class="section">1. Startup sequence</text>
+
+  <rect class="stage" x="110" y="235" width="300" height="64" rx="16"/>
+  <text x="145" y="274" class="box">docker-compose up -d --build</text>
+
+  <rect class="stage" x="470" y="235" width="270" height="64" rx="16"/>
+  <text x="505" y="274" class="box">Docker builds images</text>
+
+  <rect class="stage" x="800" y="235" width="280" height="64" rx="16"/>
+  <text x="835" y="274" class="box">Containers are started</text>
+
+  <rect class="stage" x="1140" y="235" width="260" height="64" rx="16"/>
+  <text x="1168" y="274" class="box">Entrypoint initializes runtime</text>
+
+  <rect class="stage" x="1460" y="235" width="220" height="64" rx="16"/>
+  <text x="1490" y="274" class="box">Services are reachable</text>
+
+  <line class="line" x1="410" y1="267" x2="470" y2="267" marker-end="url(#arrow)"/>
+  <line class="line" x1="740" y1="267" x2="800" y2="267" marker-end="url(#arrow)"/>
+  <line class="line" x1="1080" y1="267" x2="1140" y2="267" marker-end="url(#arrow)"/>
+  <line class="line" x1="1400" y1="267" x2="1460" y2="267" marker-end="url(#arrow)"/>
+
+  <rect class="panel" x="50" y="350" width="1700" height="210" rx="24"/>
+  <text x="85" y="396" class="section">2. Runtime state after startup</text>
+
+  <rect class="runtime" x="120" y="435" width="350" height="92" rx="18"/>
+  <text x="155" y="472" class="box">Application entry is available</text>
+  <text x="155" y="497" class="text">the local runtime can accept OCR, document,</text>
+  <text x="155" y="519" class="text">comparison, and web requests</text>
+
+  <rect class="runtime" x="550" y="435" width="320" height="92" rx="18"/>
+  <text x="585" y="472" class="box">Request routing is initialized</text>
+  <text x="585" y="497" class="text">the runtime can classify each request and</text>
+  <text x="585" y="519" class="text">dispatch it into the correct execution flow</text>
+
+  <rect class="runtime" x="950" y="435" width="590" height="92" rx="18"/>
+  <text x="985" y="472" class="box">Runtime configuration is loaded</text>
+  <text x="985" y="497" class="text">OCI, AGNTCY, OCR, vector store, and</text>
+  <text x="985" y="519" class="text">environment settings are available to the application</text>
+
+  <rect class="panel" x="50" y="590" width="1700" height="300" rx="24"/>
+  <text x="85" y="636" class="section">3. Components available in the stack</text>
+
+  <rect class="agent" x="120" y="700" width="300" height="120" rx="18"/>
+  <text x="155" y="740" class="box">OCR Service</text>
+  <text x="155" y="770" class="text">extracts text from local files</text>
+
+  <rect class="agent" x="450" y="700" width="300" height="120" rx="18"/>
+  <text x="485" y="740" class="box">Document Ingest Agent</text>
+  <text x="485" y="770" class="text">stores document text for retrieval</text>
+
+  <rect class="agent" x="780" y="700" width="300" height="120" rx="18"/>
+  <text x="815" y="740" class="box">Document Query Agent</text>
+  <text x="815" y="770" class="text">answers from stored document content</text>
+
+  <rect class="agent" x="1110" y="700" width="250" height="120" rx="18"/>
+  <text x="1145" y="740" class="box">Web Search Agent</text>
+  <text x="1145" y="770" class="text">retrieves live web results</text>
+
+  <rect class="agent" x="1390" y="700" width="250" height="120" rx="18"/>
+  <text x="1425" y="740" class="box">Comparison Agent</text>
+  <text x="1425" y="770" class="text">compares two documents</text>
+
+  <rect class="panel" x="50" y="920" width="1700" height="200" rx="24"/>
+  <text x="85" y="966" class="section">4. External systems connected to the runtime</text>
+
+  <rect class="service" x="100" y="1010" width="280" height="78" rx="16"/>
+  <text x="135" y="1050" class="box">AGNTCY Directory</text>
+  <text x="135" y="1075" class="text">agent discovery</text>
+
+  <rect class="service" x="420" y="1010" width="280" height="78" rx="16"/>
+  <text x="455" y="1050" class="box">AGNTCY Identity</text>
+  <text x="455" y="1075" class="text">agent verification</text>
+
+  <rect class="service" x="740" y="1010" width="280" height="78" rx="16"/>
+  <text x="775" y="1050" class="box">OCI Responses</text>
+  <text x="775" y="1075" class="text">reasoning and tool calling</text>
+
+  <rect class="service" x="1060" y="1010" width="320" height="78" rx="16"/>
+  <text x="1095" y="1050" class="box">OCI Files and Vector Store</text>
+  <text x="1095" y="1075" class="text">document storage and retrieval</text>
+
+  <rect class="service" x="1420" y="1010" width="280" height="78" rx="16"/>
+  <text x="1455" y="1050" class="box">OCI Remote MCP</text>
+  <text x="1455" y="1075" class="text">external tool access</text>
+</svg>

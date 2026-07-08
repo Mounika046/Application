@@ -1,0 +1,36 @@
+{
+  "name": "application/ocr-server",
+  "schema_version": "1.0.0",
+  "version": "1.0.0",
+  "description": "FastMCP server that exposes the OCR tool for document extraction.",
+  "authors": [
+    "Mounika"
+  ],
+  "created_at": "2026-03-27T12:30:00Z",
+  "annotations": {
+    "role": "mcp-server",
+    "owner": "application-mas",
+    "tools": "ocr_extract"
+  },
+  "skills": [
+    {
+      "id": 70101,
+      "name": "multi_modal/image_processing/image_to_text"
+    }
+  ],
+  "modules": [
+    {
+      "name": "integration/mcp",
+      "id": 202,
+      "data": {
+        "name": "ocr-server",
+        "connections": [
+          {
+            "type": "streamable-http",
+            "url": "http://ocr-server:8011/mcp"
+          }
+        ]
+      }
+    }
+  ]
+}

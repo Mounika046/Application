@@ -1,0 +1,79 @@
+{
+  "name": "application/comparison-agent",
+  "schema_version": "1.0.0",
+  "version": "1.0.0",
+  "description": "Compares two text inputs and returns structured differences and similarities.",
+  "authors": [
+    "Mounika"
+  ],
+  "created_at": "2026-04-03T12:30:00Z",
+  "annotations": {
+    "role": "specialist-agent",
+    "owner": "application-mas",
+    "identity.agent_id": "ORY-a04fe14b-42f9-49f6-8304-5e75a8319c37"
+  },
+  "skills": [
+    {
+      "id": 10303,
+      "name": "natural_language_processing/information_retrieval_synthesis/knowledge_synthesis"
+    },
+    {
+      "id": 10202,
+      "name": "natural_language_processing/natural_language_generation/summarization"
+    }
+  ],
+  "modules": [
+    {
+      "name": "integration/a2a",
+      "id": 203,
+      "data": {
+        "card_data": {
+          "protocolVersions": [
+            "0.3.0"
+          ],
+          "name": "comparison-agent",
+          "description": "Compares two text inputs and returns structured differences and similarities.",
+          "supportedInterfaces": [
+            {
+              "url": "http://comparison-agent:8034/",
+              "protocolBinding": "HTTP+JSON"
+            }
+          ],
+          "provider": {
+            "url": "http://comparison-agent:8034/",
+            "organization": "Application"
+          },
+          "version": "1.0.0",
+          "capabilities": {
+            "streaming": false
+          },
+          "defaultInputModes": [
+            "text/plain",
+            "application/json"
+          ],
+          "defaultOutputModes": [
+            "application/json",
+            "text/plain"
+          ],
+          "skills": [
+            {
+              "id": "document-comparison",
+              "name": "Document Comparison",
+              "description": "Compare two text inputs and return structured similarities, differences, additions, and risks.",
+              "tags": [
+                "comparison",
+                "document",
+                "diff",
+                "analysis"
+              ],
+              "examples": [
+                "{\"left_text\":\"Policy v1 text\",\"right_text\":\"Policy v2 text\",\"left_label\":\"v1\",\"right_label\":\"v2\",\"question\":\"What changed?\",\"focus\":\"dates, obligations\"}"
+              ]
+            }
+          ]
+        },
+        "card_schema_version": "v1.0.0"
+      }
+    }
+  ]
+}
